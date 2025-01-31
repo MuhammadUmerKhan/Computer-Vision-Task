@@ -1,0 +1,46 @@
+## Brief Planner for Tiny Object Detection Task (Building Class) ##
+
+✅ Step 1: Data Preprocessing  
+  Before training, ensure the dataset is correctly formatted and ready for model training.
+
+1️⃣ Filter Out Only the 'Building' Class (Class 0)
+  - Focus on detecting only buildings (class `0`).
+  - Remove annotations and images for other classes (A to F).
+  - Modify YOLO annotation files to retain only "Building" class annotations.
+
+2️⃣ Split & Verify the Data
+  - Ensure the `train`, `val`, and `test` datasets are balanced.
+  - Count the number of images in each split.
+  - Verify that there are enough "Building" class samples for effective training.
+
+✅ Step 2: Choose the Deep Learning Model  
+Select a suitable object detection approach for the task.
+
+🔹 Option 1: Use a Pretrained YOLO Model (Best for Quick Results)
+  - Utilize YOLOv5 or YOLOv8 models for fast training.
+  - Steps:
+    1. Prepare the dataset for YOLOv5/YOLOv8.
+    2. Train the model on the "Building" class only.
+    3. Fine-tune hyperparameters (learning rate, batch size, etc.).
+
+🔹 Option 2: Train a Custom Object Detection Model (Using TensorFlow)
+  - Convert the dataset to Pascal VOC or COCO format.
+  - Train models like Faster R-CNN, EfficientDet, or SSD.
+  - Monitor mAP (Mean Average Precision) during training.
+
+🔹 Option 3: Try Vision Transformers (ViTs) for Object Detection
+  - Experiment with DETR (End-to-End Object Detection with Transformers) for innovative results.
+
+✅ Step 3: Train the Model
+  - Set up training scripts for the chosen model (YOLO, TensorFlow, or PyTorch).
+  - Monitor training progress (track mAP, loss, precision, recall).
+  - Save the trained model weights for future use.
+
+✅ Step 4: Evaluate Model Performance
+  - Run inference on the test dataset.
+  - Calculate mAP for the "Building" class.
+  - Compare the results across different techniques, if applicable.
+
+✅ Step 5 (Optional): Build Streamlit UI
+  - If desired, create a Streamlit web application.
+  - Allow users to upload images and visualize bounding boxes around detected buildings.
