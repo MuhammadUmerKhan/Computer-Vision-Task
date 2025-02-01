@@ -1,0 +1,106 @@
+                                ## 📌 Detailed Explanation of the Dataset Balancing Code ##
+
+This document explains the purpose and functionality of the dataset balancing script. The script ensures that the training, validation, and test sets are correctly distributed to maintain a good balance for training an object detection model.
+
+
+1️⃣ Checking Dataset Statistics
+
+Function: `check_dataset_stats()`
+```python
+check_dataset_stats(filtered_img_data, sub_folders, dataset_stats)
+```
+Purpose:
+    - This function counts the number of images in each dataset split (train, val, test) and stores the counts in `dataset_stats`.
+    - It prints out the current dataset distribution.
+
+Parameters:
+    - `filtered_img_data`: Path to the folder containing dataset splits.
+    - `sub_folders`: List of dataset split folders (e.g., `['train', 'val', 'test']`).
+    - `dataset_stats`: A dictionary to store the counts of images in each split.
+
+Working:
+    1. Loops through each subset (`train`, `val`, `test`).
+    2. Counts the images in each subset.
+    3. Updates `dataset_stats` with the counts.
+    4. Prints the dataset distribution.
+
+
+2️⃣ Checking Dataset Split Balance
+
+Function: `check_dataset_distribution()`
+```python
+check_dataset_distribution(dataset_stats)
+```
+Purpose:
+    - This function calculates the percentage split of train, validation, and test datasets.
+    - It checks if the dataset is balanced (ideal split: ~80% train, ~10% validation, ~10% test).
+
+Parameters:
+    - `dataset_stats`: Dictionary containing counts of images in `train`, `val`, and `test` sets.
+
+Working:
+    1. Retrieves counts of `train`, `val`, and `test` images.
+    2. Calculates total dataset size.
+    3. Computes the percentage split for each set.
+    4. Prints the computed percentages.
+    5. Checks if the dataset is imbalanced:
+        - If the train set is <70% or val/test is <10%, it prints a warning.
+        - Otherwise, it confirms that the dataset is well-balanced.
+
+
+3️⃣ Balancing the Dataset
+
+Function: `data_balancer()`
+```python
+data_balancer(filtered_base_path, 20)
+```
+Purpose:
+    - Moves a specified number of images and their corresponding labels from the validation set to the training set to balance the dataset.
+
+Parameters:
+    - `filtered_base_path`: Base directory where the dataset is stored.
+    - `num_to_move`: Number of images (and labels) to move from `val` to `train`.
+
+Working:
+    1. Defines paths for `train` and `val` images and labels.
+    2. Retrieves a list of images from the validation set.
+    3. Moves `num_to_move` images from `val` to `train`.
+    4. Moves corresponding label files as well, ensuring annotation consistency.
+    5. Prints a success message upon completion.
+
+
+4️⃣ Running the Workflow
+
+Step 1: Check Initial Dataset Distribution
+```python
+check_dataset_stats(filtered_img_data, sub_folders, dataset_stats)
+```
+- Prints the current dataset distribution.
+
+Step 2: Check if Dataset is Balanced
+```python
+check_dataset_distribution(dataset_stats)
+```
+- Prints the percentage split and warns if it's imbalanced.
+
+Step 3: Balance the Dataset (if needed)
+```python
+data_balancer(filtered_base_path, 20)
+```
+- Moves 20 images & labels from `val` to `train`.
+
+Step 4: Recheck Dataset Distribution
+```python
+check_dataset_stats(filtered_img_data, sub_folders, dataset_stats)
+check_dataset_distribution(dataset_stats)
+```
+- Ensures the dataset is now well-balanced before training begins.
+
+
+ 📌 Final Thoughts
+        This script plays a crucial role in preparing a balanced dataset for training an object detection model. Proper dataset splits are essential to:
+            ✅ Ensure good generalization in the model.
+            ✅ Avoid overfitting to a specific subset.
+            ✅ Maintain a realistic evaluation using validation and test sets.
+
+Our the dataset is balanced, you can proceed to model training! 🚀🔥
