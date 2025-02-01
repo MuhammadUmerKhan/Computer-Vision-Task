@@ -1,0 +1,62 @@
+## Documentation: Tiny Object Detection with YOLO (Building Class) ##
+
+# Overview:
+    - This code implements the filtering of annotations and images for a tiny object detection task using the YOLO (You Only Look Once) annotation format. Specifically, it filters out images and annotations that do not contain the "Building" class (class `0`), ensuring that only relevant data is retained for training, validation, and testing of the object detection model.
+    - The code processes images and their associated YOLO annotations, filters annotations to keep only the "Building" class, and saves the filtered images and annotations in separate directories for training, validation, and testing.
+
+# Functions:
+
+    1. `visualize_image(image_path, label_path)`:
+    - Purpose: This function reads an image and its corresponding annotation file (in YOLO format), and visualizes the image with bounding boxes drawn around the objects labeled as class `0` (Building).
+    - Input:
+        - `image_path`: Path to the image file.
+        - `label_path`: Path to the corresponding YOLO annotation file.
+    - Output: Displays the image with bounding boxes using Matplotlib.
+    - Details: The image is read using OpenCV, and bounding boxes are drawn on the image based on the annotation file. Class `0` is specifically highlighted with a red bounding box (representing "Building"). This is useful for verifying that the correct objects are being detected and visualized.
+
+    2. `filter_building_annotations(labels_base_path, images_base_path, output_labels_path, output_images_path, subfolders)`:
+    - Purpose: This function filters the dataset to keep only the images and annotations that contain the "Building" class (class `0`). All other images and annotations are skipped.
+    - Input:
+        - `labels_base_path`: Path to the original dataset's label files.
+        - `images_base_path`: Path to the original dataset's image files.
+        - `output_labels_path`: Path to the output folder where filtered labels will be saved.
+        - `output_images_path`: Path to the output folder where filtered images will be saved.
+        - `subfolders`: List of subfolders (e.g., `train`, `val`, `test`) to process.
+    - Output: Filters and saves the images and annotations containing only the "Building" class into the specified output folders.
+    - Details: The function iterates through each subfolder (`train`, `val`, `test`), reads the annotation files, filters out annotations that do not belong to the "Building" class, and saves the filtered annotations and corresponding images to new folders. If no valid "Building" annotations are found, the image and label are skipped. This ensures that only relevant data is retained for model training and evaluation.
+
+    3. `read_yolo_annotations(label_file)`:
+    - Purpose: This utility function reads a YOLO annotation file and returns the annotations as a list of floating-point values.
+    - Input:
+        - `label_file`: Path to the YOLO annotation file.
+    - Output: A list of annotations, where each annotation contains the class ID and bounding box coordinates (center, width, and height) in relative values.
+    - Details: The annotations in YOLO format are parsed into a list of floats that represent the class and bounding box information. The coordinates are normalized to the image size.
+
+    4. Main Execution Block:
+    - Purpose: The main execution block visualizes the first 15 images from the dataset (from the `train`, `val`, and `test` subfolders) and their annotations before processing. It then filters the dataset to retain only images with "Building" annotations and moves them to the appropriate output folders.
+    - Process:
+        1. It iterates over the dataset to collect all image files.
+        2. It visualizes the first 15 images along with their annotations to ensure correctness.
+        3. It calls `filter_building_annotations()` to filter the dataset and save the relevant images and annotations into new directories.
+
+
+# Directory Structure:
+
+    - Input Folders:
+    - `images/train`, `images/val`, `images/test`: These contain the original images for training, validation, and testing.
+    - `labels/train`, `labels/val`, `labels/test`: These contain the corresponding YOLO annotation files for the images.
+    
+    - Output Folders:
+    - `filtered_images/train`, `filtered_images/val`, `filtered_images/test`: These contain the filtered images that have annotations for the "Building" class.
+    - `filtered_labels/train`, `filtered_labels/val`, `filtered_labels/test`: These contain the filtered annotation files for the "Building" class.
+
+# Expected Workflow:
+    1. Visualize the Data: The images are visualized to ensure the bounding boxes for "Building" objects are correctly drawn.
+    2. Filter the Data: The filtering function scans through all annotation files, retaining only those that contain the "Building" class (class `0`). Corresponding images are copied to the filtered output folder.
+    3. Output: After filtering, the output directories will contain only the images and annotations related to the "Building" class, ensuring the dataset is ready for training, validation, and testing.
+
+# Summary of Key Points:
+    - The code processes images and labels in the YOLO format to keep only those images that contain annotations for the "Building" class.
+    - The `filter_building_annotations()` function removes any images and labels that do not contain the "Building" class, ensuring that only relevant data is used in the training and evaluation process.
+    - Bounding boxes are drawn on the images to visualize the correctness of the annotations before the filtering process.
+    - The final filtered dataset will contain images and annotations exclusively for the "Building" class, ready for training the object detection model.
