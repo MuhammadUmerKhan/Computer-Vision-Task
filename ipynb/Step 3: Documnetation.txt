@@ -1,58 +1,80 @@
-                ## Documentation for YOLO to VOC Conversion and Visualization Code ##
+        Documentation for YOLO to VOC Conversion, File Management, and Visualization Code 
+ Overview:
+        This Python script is responsible for converting object detection annotations from YOLO format to VOC (Pascal VOC) XML format, which is a standard used in many computer vision tasks. It also moves annotation files and images to the appropriate directories and provides functionality to visualize annotations (bounding boxes) on the images.
 
-Overview:
-    - This Python script converts object detection annotations from YOLO format to VOC (Pascal VOC) XML format, which is a standard used in many computer vision tasks. The code processes annotation files, converts them, and saves the XML annotations. Additionally, the script provides functionality to visualize annotations (bounding boxes) on the images.
-
-Code Breakdown:
+ Code Breakdown:
 
 1. Imports:
-   - `os`: For handling file system paths and directory operations.
-   - `cv2`: For reading images and manipulating image data.
-   - `xml.etree.ElementTree as ET`: For creating and writing XML files.
-   - `matplotlib.pyplot as plt`: For visualizing images and annotations.
+- **`os`**: For handling file system paths and directory operations.
+- **`cv2`**: For reading images and manipulating image data.
+- **`xml.etree.ElementTree as ET`**: For creating and writing XML files.
+- **`matplotlib.pyplot as plt`**: For visualizing images and annotations.
+- **`shutil`**: For moving files between directories.
 
 2. Constants and Directory Paths:
-   - `class_mapping`: A dictionary mapping class IDs (YOLO format) to class names.
-   - `label_dir`, `image_dir`: Directories containing YOLO annotations and images.
-   - `sub_folders`: Subdirectories within the `train`, `test`, and `val` sets.
+- **`class_mapping`**: A dictionary mapping class IDs (YOLO format) to class names.
+- **`label_dir`, `image_dir`**: Directories containing YOLO annotations and images.
+- **`sub_folders`**: Subdirectories within the `train`, `test`, and `val` sets.
 
 3. Functions:
-   
-    - `yolo_to_voc(yolo_bbox, img_width, img_height)`:
-    - Converts YOLO-format bounding box coordinates to VOC format. YOLO uses normalized coordinates, while VOC uses pixel-based coordinates.
-    - The function computes the bounding box corners (`xmin`, `ymin`, `xmax`, `ymax`) from YOLO's normalized center and size.
 
-   - `create_voc_xml(image_name, img_width, img_height, bboxes, output_path)`:
-     - Generates a Pascal VOC XML annotation file.
-     - Includes image details such as width, height, and class labels with bounding box coordinates.
-     - Saves the XML file in the specified output directory.
+3.1 `yolo_to_voc(yolo_bbox, img_width, img_height)`:
+- Converts YOLO-format bounding box coordinates to VOC format. YOLO uses normalized coordinates, while VOC uses pixel-based coordinates.
+- The function computes the bounding box corners (`xmin`, `ymin`, `xmax`, `ymax`) from YOLO's normalized center and size.
 
-   - Main Code Logic for Converting YOLO to VOC XML:
-     - For each split (`train`, `test`, `val`), the script iterates through YOLO annotation files (with `.txt` extension) and corresponding image files.
-     - For each annotation file:
-       - It reads the YOLO annotations, converts them to VOC format, and generates the XML annotation.
-       - The XML annotation is saved in the output directory under `xml_annotations`.
+3.2 `create_voc_xml(image_name, img_width, img_height, bboxes, output_path)`:
+- Generates a Pascal VOC XML annotation file.
+- Includes image details such as width, height, and class labels with bounding box coordinates.
+- Saves the XML file in the specified output directory.
 
-   - `parse_voc_annotation(xml_file)`:
-     - Parses a VOC XML file and extracts object details: class name and bounding box coordinates.
+3.3 **Main Code Logic for Converting YOLO to VOC XML:**
+- For each split (`train`, `test`, `val`), the script iterates through YOLO annotation files (with `.txt` extension) and corresponding image files.
+- For each annotation file:
+  - It reads the YOLO annotations, converts them to VOC format, and generates the XML annotation.
+  - The XML annotation is saved in the output directory under `xml_annotations`.
 
-   - `visualize_annotation(image_file, annotation_file)`:
-     - Loads an image and its corresponding XML annotation.
-     - Draws bounding boxes around objects in the image based on the annotation.
-     - Displays the image with annotations using Matplotlib.
+3.4 `parse_voc_annotation(xml_file)`:
+- Parses a VOC XML file and extracts object details: class name and bounding box coordinates.
 
-4. Execution Flow:
-   - The script loops over each subfolder (`train`, `test`, `val`), processes the annotations, and saves the converted VOC XML annotations in the `xml_annotations` subfolder.
-   - After the conversion is done, a sample image and its annotation are visualized, where the bounding boxes are drawn on the image.
+3.5 `visualize_annotation(image_file, annotation_format)`:
+- Loads an image and its corresponding XML annotation.
+- Draws bounding boxes around objects in the image based on the annotation.
+- Displays the image with annotations using Matplotlib.
 
-Example Usage:
+4. Moving Files:
+
+**`combine_files(image_dir, label_dir, combined_dir)`**:
+- This function combines image and label files for each split (`train`, `test`, `val`) into a single folder, making the dataset easier to use.
+- For each split, the function:
+  - Ensures that the directories for images and labels exist.
+  - Moves matching images and label files to the `combined_dir` directory.
+  - The function checks for files with matching names in both the image and label folders (i.e., images with `.png`, `.jpg`, or `.jpeg` and labels with `.txt`).
+  - It ensures that both the image and label files are present before moving them to the new directory.
+
+  **Example:**
+  - If the `train` split has an image `1.jpg` and a label file `1.txt`, the script will copy both files to the `combined_dir/train` directory.
+
+  **Error Handling:**
+  - If an image has no corresponding label file, a warning message is displayed.
+  - The files are moved and copied, ensuring the dataset structure is consistent across all splits.
+
+**Usage:**
+- The `combine_files` function is called from the `main` function, which also defines the paths for the image and label directories and the output combined directory.
+
+5. Execution Flow:
+- The script loops over each subfolder (`train`, `test`, `val`), processes the annotations, and saves the converted VOC XML annotations in the `xml_annotations` subfolder.
+- After the conversion is done, a sample image and its annotation are visualized, where the bounding boxes are drawn on the image.
+- Finally, the `combine_files` function is called to organize the dataset into a single location for easier use.
+
+6. Example Usage:
     1. The dataset contains YOLO annotations (in `.txt` format) and corresponding images (in `.png` format).
     2. The script:
     - Converts YOLO annotations to VOC XML format.
     - Saves the converted annotations in the same directory under `xml_annotations`.
     - Visualizes a sample image and its annotations.
+    - Moves image and annotation files into a new directory (`combined_dir`), organized by split (train, test, val).
 
-Folder Structure:
+7. Folder Structure:
 ```
 Data/
     tiny_object_detection_yolo/
@@ -70,21 +92,14 @@ Data/
                 *.png
             val/
                 *.png
+        Yolo__Data/            Final combined folder for images and labels
+            train/
+                *.png          Moved images
+                *.txt          Corresponding labels
+            test/
+                *.png
+                *.txt
+            val/
+                *.png
+                *.txt
 ```
-
-Notes:
-    - Image Format Assumption: The script assumes that images are in `.png` format, though this can be modified.
-    - Bounding Boxes: The code visualizes the bounding boxes on images using OpenCV and Matplotlib, with the object class label displayed near the top-left corner of each box.
-
-Output:
-    - The converted VOC XML annotations are saved in the respective subfolder (`train`, `test`, `val`) inside the `xml_annotations` folder.
-    - Visualization of bounding boxes is shown for a sample image.
-
-Example Output:
-    The code will print a message after converting annotations for each split:
-
-```
-✅ Conversion completed for train set. XML annotations saved in ../Data/tiny_object_detection_yolo/filtered_labels/train/xml_annotations
-```
-
-For visualization, a sample image with bounding boxes will be shown.
