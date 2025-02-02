@@ -1,0 +1,8 @@
+path: /content/Filtered Data  # Root directory of the dataset
+train: train                   # Train folder (relative to 'path')
+val: val                       # Val folder (relative to 'path')
+test: test                     # Test folder (optional)
+
+# Classes (your dataset has 1 class: 'building')
+names:
+  0: building
