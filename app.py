@@ -171,14 +171,9 @@ with tab2:
 
     # Path to the trained model
     MODEL_PATH = "./Model/best.pt"
-
-    # Function to load and cache the YOLO model
-    @st.cache_resource  
-    def load_model():
-        return YOLO(MODEL_PATH)
-
+    
     # Load the model
-    model = load_model()
+    model = YOLO(MODEL_PATH)
 
     if uploaded_file:
         # Read and convert the uploaded image
