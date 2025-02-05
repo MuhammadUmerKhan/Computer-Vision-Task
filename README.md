@@ -86,7 +86,9 @@ Open your browser and navigate to:
 - **Data preprocessing significantly impacted results**, ensuring better annotations improved model performance. 🏗️
 
 ---
-
+## 🔴 Check Live Demo:
+- [Object Detector App](https://tiny-object-detection-with-yolo.streamlit.app/)
+---
 ## 🔖 Conclusion
 By leveraging deep learning techniques, our model enhances tiny object detection, crucial for urban analysis, disaster management, and remote sensing. Future improvements could include integrating **Vision Transformers (ViTs)** for even better small-object recognition! 🌍🔬
 
