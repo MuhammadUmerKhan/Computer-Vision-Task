@@ -1,57 +1,57 @@
-                            # YOLOv8-Based Tiny Object Detection for Buildings
+# YOLOv8-Based Tiny Object Detection for Buildings
 
 ## Overview  
-    This project implements a YOLOv8-based object detection model to identify tiny buildings in satellite/aerial images. The dataset is preprocessed, trained using YOLOv8m, and evaluated using standard mAP metrics. The code includes visualization, training, and validation functions.  
+This project implements a YOLOv8-based object detection model to identify tiny buildings in satellite/aerial images. The dataset is preprocessed, trained using YOLOv8m, and evaluated using standard mAP metrics. The code includes visualization, training, and validation functions.  
 
 ---
 
 ## Code Explanation  
 
-1. Visualization of Processed Images  
-   - The `visualize_processed_image` function loads an image and its corresponding bounding box annotations.  
-   - The function reads the image using OpenCV, converts its color format, and displays it using `matplotlib`.  
-   - The bounding boxes are drawn on the image to check label correctness after preprocessing.  
+### 1. Visualization of Processed Images  
+- The `visualize_processed_image` function loads an image and its corresponding bounding box annotations.  
+- The function reads the image using OpenCV, converts its color format, and displays it using `matplotlib`.  
+- The bounding boxes are drawn on the image to check label correctness after preprocessing.  
 
-2. YOLOv8 Model Training (`train_yolo` function)  
-   - Clears GPU memory before training to avoid memory issues.  
-   - Loads the YOLOv8m model, a mid-sized version that balances speed and accuracy.  
-   - The model is trained with:  
-     - 100 epochs to allow sufficient learning.  
-     - Batch size of 4, optimizing for GPU memory limitations.  
-     - Learning rate of 0.001 with weight decay for stable convergence.  
-     - Augmentations like `mosaic=1.0` and `perspective=0.0001` to improve generalization.  
-   - The `save=True` ensures the best model checkpoint is stored for evaluation.  
-   - The training results are saved under `"runs/yolo_training/exp1"`.  
+### 2. YOLOv8 Model Training (`train_yolo` function)  
+- Clears GPU memory before training to avoid memory issues.  
+- Loads the YOLOv8m model, a mid-sized version that balances speed and accuracy.  
+- The model is trained with:  
+  - 100 epochs to allow sufficient learning.  
+  - Batch size of 4, optimizing for GPU memory limitations.  
+  - Learning rate of 0.001 with weight decay for stable convergence.  
+  - Augmentations like `mosaic=1.0` and `perspective=0.0001` to improve generalization.  
+- The `save=True` ensures the best model checkpoint is stored for evaluation.  
+- The training results are saved under `"runs/yolo_training/exp1"`.  
 
-3. Model Validation (`validate_model` function)  
-   - Loads the best-trained model from `runs/detect/train/weights/best.pt`.  
-   - Evaluates performance using mAP metrics with `conf=0.25` and `iou=0.45`.  
-   - The `mAP50` and `mAP50-95` scores are printed to assess detection performance.  
+### 3. Model Validation (`validate_model` function)  
+- Loads the best-trained model from `runs/detect/train/weights/best.pt`.  
+- Evaluates performance using mAP metrics with `conf=0.25` and `iou=0.45`.  
+- The `mAP50` and `mAP50-95` scores are printed to assess detection performance.  
 
 ---
 
 ## Justification for Low mAP Accuracy  
 
 ### 1. Small Dataset Size  
-   - The dataset is limited in size, which restricts the model’s ability to generalize well.  
-   - Tiny object detection requires a large and diverse dataset for high accuracy.  
+- The dataset is limited in size, which restricts the model’s ability to generalize well.  
+- Tiny object detection requires a large and diverse dataset for high accuracy.  
 
 ### 2. Tiny Object Detection Challenges  
-   - Buildings occupy only a small fraction of the images, making detection harder.  
-   - YOLO’s anchor-based approach struggles with very small objects, leading to lower recall.  
+- Buildings occupy only a small fraction of the images, making detection harder.  
+- YOLO’s anchor-based approach struggles with very small objects, leading to lower recall.  
 
 ### 3. Need for Higher Resolution Images  
-   - If images are downscaled too much, tiny objects become indistinguishable.  
-   - Higher resolution training may improve results but requires more computational power.  
+- If images are downscaled too much, tiny objects become indistinguishable.  
+- Higher resolution training may improve results but requires more computational power.  
 
 ### 4. Potential Solutions for Improvement  
-   - More data: Increase dataset size by collecting more images or augmenting existing data.  
-   - Finer anchor tuning: Adjust anchor sizes for small object detection.  
-   - Higher image resolution: Train with larger images to retain tiny object details.  
-   - Different model architectures: Try YOLOv8x (larger model) or use a Faster R-CNN with Feature Pyramid Networks (FPN) for better performance.  
-   - Advanced augmentation: Use mixup, copy-paste, and synthetic data generation to boost training.  
+- **More Data**: Increase dataset size by collecting more images or augmenting existing data.  
+- **Finer Anchor Tuning**: Adjust anchor sizes for small object detection.  
+- **Higher Image Resolution**: Train with larger images to retain tiny object details.  
+- **Different Model Architectures**: Try YOLOv8x (larger model) or use a Faster R-CNN with Feature Pyramid Networks (FPN) for better performance.  
+- **Advanced Augmentation**: Use mixup, copy-paste, and synthetic data generation to boost training.  
 
 ---
 
-### Conclusion  
+## Conclusion  
 The project successfully implements YOLOv8m for tiny object detection in aerial images. The current performance is limited by dataset size, object scale, and annotation quality. Future improvements can focus on dataset expansion, fine-tuning model parameters, and exploring alternative architectures.  
