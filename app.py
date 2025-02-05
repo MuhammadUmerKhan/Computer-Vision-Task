@@ -4,7 +4,7 @@ from ultralytics import YOLO  # YOLO object detection model from the ultralytics
 import cv2  # OpenCV for image processing and drawing bounding boxes
 from PIL import Image  # PIL for image manipulation
 import numpy as np  # NumPy for handling image arrays
-# import torch # torch for model loading
+import torch # torch for model loading
 
 # Streamlit page configuration
 st.set_page_config(
@@ -175,6 +175,7 @@ with tab2:
     # model = torch.load(MODEL_PATH, map_location="cpu")
     
     # Load the model
+    torch.serialization.add_safe_globals(["ultralytics.nn.tasks.DetectionModel"])
     model = YOLO("./Model/best.pt")
 
     if uploaded_file:
