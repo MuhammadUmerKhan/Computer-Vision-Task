@@ -1,22 +1,23 @@
-import streamlit as st
-import torch
-from ultralytics import YOLO
-from PIL import Image
-import numpy as np
+# Import necessary libraries
+import streamlit as st  # Streamlit for creating the web interface
+from ultralytics import YOLO  # YOLO object detection model from the ultralytics library
+import cv2  # OpenCV for image processing and drawing bounding boxes
+from PIL import Image  # PIL for image manipulation
+import numpy as np  # NumPy for handling image arrays
 
 # Streamlit page configuration
 st.set_page_config(
-    page_title="Tiny Object Detection - Buildings",
-    page_icon="🏢",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    page_title="Tiny Object Detection - Buildings",  # Set the page title
+    page_icon="🏢",  # Set the page icon (building emoji)
+    layout="wide",  # Set layout to wide for more space
+    initial_sidebar_state="expanded"  # Start with sidebar expanded
 )
 
-# Custom CSS for styling
+# Custom CSS for styling the page
 st.markdown("""
     <style>
         body {
-            margin-top: -10px;
+            margin-top: -10px;  # Adjust top margin
         }
         .main-title {
             font-size: 2.5em;
@@ -95,17 +96,15 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# Title of the Streamlit app
+st.markdown('<div class="main-title">🏢 Tiny Object Detection - Buildings with YOLOv8</div>', unsafe_allow_html=True)
 
-# Title
-st.markdown('<div class="main-title">🏢 Tiny Object Detection - Buildings</div>', unsafe_allow_html=True)
-
-# Tab layout
+# Create tabs for the app
 tab1, tab2 = st.tabs(["📖 About & Methodology", "📷 Upload & Detect"])
 
-# About & Methodology
-
+# Tab 1: About & Methodology content
 with tab1:
-    # About Me
+    # Section: About Me
     st.markdown('<div class="section-title">👋 About Me</div>', unsafe_allow_html=True)
     st.markdown("""
         <div class="content">
@@ -116,7 +115,7 @@ with tab1:
         </div>
     """, unsafe_allow_html=True)
 
-    # Project Overview
+    # Section: Project Overview
     st.markdown('<div class="section-title">🎯 Project Overview</div>', unsafe_allow_html=True)
     st.markdown("""
         <div class="content">
@@ -126,7 +125,7 @@ with tab1:
         </div>
     """, unsafe_allow_html=True)
 
-    # Dataset Information
+    # Section: Dataset Information
     st.markdown('<div class="section-title">📊 Dataset Information</div>', unsafe_allow_html=True)
     st.markdown("""
         <div class="content">
@@ -138,12 +137,12 @@ with tab1:
         </div>
     """, unsafe_allow_html=True)
 
-    # Steps Performed
+    # Section: Steps Performed
     st.markdown('<div class="section-title">🔬 Steps Performed</div>', unsafe_allow_html=True)
     st.markdown("""
         <div class="content">
             <ul>
-                <li>🛠 <b>Data Preprocessing:</b> Converted YOLO annotations to Pascal VOC format for training. Removed images without building labels and balanced dataset.</li>
+                <li>🛠 <b>Data Preprocessing:</b> Converted YOLO annotations txt format for training. Removed images without building labels and balanced dataset.</li>
                 <li>📑 <b>Model Training:</b> Used <b>YOLOv8</b> for initial training and planned to experiment with YOLO for better accuracy.</li>
                 <li>📈 <b>Evaluation:</b> Assessed model performance using <b>mAP (Mean Average Precision)</b> and adjusted hyperparameters for optimization.</li>
                 <li>🌐 <b>Interactive UI:</b> Developed a <b>Streamlit</b> application for real-time object detection visualization.</li>
@@ -152,7 +151,7 @@ with tab1:
         </div>
     """, unsafe_allow_html=True)
 
-    # Technologies & Tools
+    # Section: Technologies & Tools
     st.markdown('<div class="section-title">💻 Technologies & Tools</div>', unsafe_allow_html=True)
     st.markdown("""
         <div class="content">
@@ -165,29 +164,48 @@ with tab1:
         </div>
     """, unsafe_allow_html=True)
 
-# Second Tab: Resume Parsing
-
-# Upload & Detect
+# Tab 2: Upload & Detect content
 with tab2:
-    st.markdown('<div class="section-title">📷 Upload an Image for Detection</div>', unsafe_allow_html=True)
-    uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+    st.markdown('<div class="section-title">🏠 Tiny Object (Building) Detection with YOLOv8</div>', unsafe_allow_html=True)
+    uploaded_file = st.file_uploader("📷 Upload an image", type=["jpg", "jpeg", "png"])
 
-    # if uploaded_file is not None:
-    #     image = Image.open(uploaded_file)
-    #     st.image(image, caption="Uploaded Image", width=350)
+    # Path to the trained model
+    MODEL_PATH = "./Model/best.pt"
 
-    #     # Load YOLO model
-    #     model = YOLO("yolov8l.pt")  # Change to your trained model
-    #     img_array = np.array(image)
+    # Function to load and cache the YOLO model
+    @st.cache_resource  
+    def load_model():
+        return YOLO(MODEL_PATH)
 
-    #     # Run detection
-    #     results = model(img_array)
+    # Load the model
+    model = load_model()
 
-    #     # Display detection results
-    #     st.markdown('<div class="section-title">🏢 Detection Results</div>', unsafe_allow_html=True)
-    #     st.image(results[0].plot(), caption="Detection Output", width=600)
+    if uploaded_file:
+        # Read and convert the uploaded image
+        image = Image.open(uploaded_file)
+        image = np.array(image)
 
-# Footer
+        # Run YOLOv8 inference for object detection
+        st.write("🧐 Detecting buildings... Please wait.")
+        results = model(image)
+
+        # Draw bounding boxes on the image
+        for result in results:
+            for box in result.boxes:
+                x1, y1, x2, y2 = map(int, box.xyxy[0])  # Extract bounding box coordinates
+                confidence = box.conf[0].item()  # Get the confidence score of the detection
+                class_id = int(box.cls[0])  # Get the class ID (should be 0 for building)
+
+                # Draw rectangle around detected building and display confidence score
+                cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                cv2.putText(image, f"Building: {confidence:.2f}", (x1, y1 - 10), 
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+        # Display the image with detected buildings
+        # Display the image in medium size
+        st.image(image, caption="Detected Buildings", width=700)
+
+# Footer with credit and link to portfolio
 st.markdown("""
-    <div class="footer">Developed by <a href="https://portfolio-sigma-mocha-67.vercel.app" target="_blank">Muhammad Umer Khan</a>. Powered by YOLOv8 & Streamlit.</div>
+    <div class="footer">Developed by <a href="https://portfolio-sigma-mocha-67.vercel.app" target="_blank">Muhammad Umer Khan</a>. Powered by YOLOv8 & Streamlit 🌐 .</div>
 """, unsafe_allow_html=True)
