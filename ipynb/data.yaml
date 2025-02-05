@@ -1,0 +1,6 @@
+path: /content/Yolo__Data
+train: /content/Yolo__Data/train
+val: /content/Yolo__Data/val
+test: /content/Yolo__Data/test
+
+names: ["building"]
