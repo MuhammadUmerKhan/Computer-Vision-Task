@@ -169,14 +169,12 @@ with tab1:
 with tab2:
     st.markdown('<div class="section-title">🏠 Tiny Object (Building) Detection with YOLOv8</div>', unsafe_allow_html=True)
     uploaded_file = st.file_uploader("📷 Upload an image", type=["jpg", "jpeg", "png"])
-
-    # Path to the trained model
-    MODEL_PATH = ""
-    # model = torch.load(MODEL_PATH, map_location="cpu")
     
-    # Load the model
-    torch.serialization.add_safe_globals(["ultralytics.nn.tasks.DetectionModel"])
-    model = YOLO("./Model/best.pt")
+    # # Load the model
+    # torch.serialization.add_safe_globals(["ultralytics.nn.tasks.DetectionModel"])
+    # model = YOLO("./Model/best.pt")
+    with st.spinner('Loading detection model...'):
+        model = YOLO('./Model/best.pt', task='detect')
 
     if uploaded_file:
         # Read and convert the uploaded image
