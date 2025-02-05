@@ -1,6 +1,6 @@
 # 🏗️ Tiny Object Detection: Building Detection Project
 
-![Building Detection](https://github.com/MuhammadUmerKhan/Computer-Vision-Task/blob/main/imgs/img1.png)
+![Building Detection](https://github.com/MuhammadUmerKhan/Computer-Vision-Task/blob/main/imgs/Building%20Sample%20Imgs/Screenshot%20From%202025-02-05%2013-20-24.png)
 
 In urban planning, disaster management, and satellite imagery analysis, detecting tiny objects like buildings is a crucial task. This project focuses on developing a deep learning model to detect buildings in aerial imagery, addressing challenges such as small object sizes and overlapping structures. 🏠✨
 
