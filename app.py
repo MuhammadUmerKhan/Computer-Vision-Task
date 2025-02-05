@@ -174,7 +174,7 @@ with tab2:
     # torch.serialization.add_safe_globals(["ultralytics.nn.tasks.DetectionModel"])
     # model = YOLO("./Model/best.pt")
     with st.spinner('Loading detection model...'):
-        model = YOLO('./Model/best.pt', task='detect')
+        model = YOLO('./YOLO Model/best.pt', task='detect')
 
     if uploaded_file:
         # Read and convert the uploaded image
