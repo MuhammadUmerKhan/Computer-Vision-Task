@@ -8,7 +8,7 @@ This folder contains Jupyter notebooks (`.ipynb` files) that document and execut
 ## Notebooks Overview  
 
 1️⃣ **Annotation Filtering & Preprocessing**  
-   - **File:** `annotation_filtering.ipynb`  
+   - **File:** `Step 1: annotation_filtering.ipynb`  
    - **Purpose:** Filters images and annotations to retain only those containing buildings (class `0`).  
    - **Key Steps:**  
      - Reads YOLO annotation files and extracts valid bounding boxes.  
@@ -16,7 +16,7 @@ This folder contains Jupyter notebooks (`.ipynb` files) that document and execut
      - Saves the filtered dataset in structured folders for training, validation, and testing.  
 
 2️⃣ **Dataset Balancing**  
-   - **File:** `dataset_balancing.ipynb`  
+   - **File:** `Step 2: dataset_balancing.ipynb`  
    - **Purpose:** Ensures the dataset is well-distributed across `train`, `val`, and `test` sets.  
    - **Key Steps:**  
      - Checks dataset statistics (image counts per split).  
@@ -24,7 +24,7 @@ This folder contains Jupyter notebooks (`.ipynb` files) that document and execut
      - Moves images and labels to balance the dataset.  
 
 3️⃣ **YOLOv8 Model Training**  
-   - **File:** `train_yolo.ipynb`  
+   - **File:** `Step 3: train_yolo.ipynb`  
    - **Purpose:** Implements YOLOv8-based object detection for detecting tiny buildings in aerial images.  
    - **Key Steps:**  
      - Loads YOLOv8m model and configures hyperparameters.  
@@ -32,7 +32,7 @@ This folder contains Jupyter notebooks (`.ipynb` files) that document and execut
      - Saves the best-performing model for evaluation.  
 
 4️⃣ **Model Evaluation & Performance Analysis**  
-   - **File:** `evaluate_model.ipynb`  
+   - **File:** `Step 4: evaluate_model.ipynb`  
    - **Purpose:** Evaluates the trained model’s accuracy using mAP metrics.  
    - **Key Steps:**  
      - Loads the best model checkpoint.  
